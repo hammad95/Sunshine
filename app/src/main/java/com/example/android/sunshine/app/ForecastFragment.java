@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,20 +92,25 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute();
+            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+            fetchWeatherTask.execute("11230");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
         // Get the name of the class for the Log messages
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            // If no postal code, return
+            if(params.length == 0)
+                return null;
+
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -111,6 +118,34 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
+
+            String format = "json";
+            String units = "metric";
+            int numDays = 7;
+
+            // Query parameter tags needed to construct uri
+            final String BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+            final String QUERY_PARAM = "q";
+            final String FORMAT_PARAM = "mode";
+            final String UNITS_PARAM = "units";
+            final String DAYS_PARAM = "cnt";
+
+            // Build uri by appending params
+            Uri uri = Uri.parse(BASE_URL).buildUpon().
+                    appendQueryParameter(QUERY_PARAM, params[0]).
+                    appendQueryParameter(FORMAT_PARAM, format).
+                    appendQueryParameter(UNITS_PARAM, units).
+                    appendQueryParameter(DAYS_PARAM, Integer.toString(numDays)).
+                    build();
+
+            // Assign uri to url if uri built properly
+            try {
+                URL url = new URL(uri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            Log.v(LOG_TAG, "Built uri: " + uri.toString());
 
             try {
                 // Construct the URL for the OpenWeatherMap query
