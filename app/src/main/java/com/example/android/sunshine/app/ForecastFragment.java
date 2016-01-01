@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +28,7 @@ import java.util.List;
  * Created by Hassan on 12/30/2015.
  */
 public class ForecastFragment extends android.support.v4.app.Fragment {
+
     private ArrayAdapter<String> mForecastAdapter; // adapter to populate ListView
 
     public ForecastFragment() {
@@ -107,7 +107,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-            // If no postal code, return
+            // If no postal code, return null
             if(params.length == 0)
                 return null;
 
@@ -119,41 +119,36 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
+            // Values for query param keys
+            String zipCode = params[0];  // Postal code can be retrieved from params[0]
             String format = "json";
             String units = "metric";
             int numDays = 7;
 
-            // Query parameter tags needed to construct uri
+            // Query parameter keys needed to construct uri
             final String BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
-            final String QUERY_PARAM = "q";
+            final String ZIP_PARAM = "zip";
             final String FORMAT_PARAM = "mode";
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
-
-            // Build uri by appending params
-            Uri uri = Uri.parse(BASE_URL).buildUpon().
-                    appendQueryParameter(QUERY_PARAM, params[0]).
-                    appendQueryParameter(FORMAT_PARAM, format).
-                    appendQueryParameter(UNITS_PARAM, units).
-                    appendQueryParameter(DAYS_PARAM, Integer.toString(numDays)).
-                    build();
-
-            // Assign uri to url if uri built properly
-            try {
-                URL url = new URL(uri.toString());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            Log.v(LOG_TAG, "Built uri: " + uri.toString());
+            final String API_KEY_PARAM = "appid";
 
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/" +
-                        "daily?q=11230&mode=json&units=metric&cnt=7&" +
-                        "appid=7f1777cc20ba2ac8b65cfafd8145b58c");
+                // Build uri by appending params using URI.Builder
+                Uri uri = Uri.parse(BASE_URL).buildUpon().
+                        appendQueryParameter(ZIP_PARAM, zipCode).
+                        appendQueryParameter(FORMAT_PARAM, format).
+                        appendQueryParameter(UNITS_PARAM, units).
+                        appendQueryParameter(DAYS_PARAM, Integer.toString(numDays)).
+                        appendQueryParameter(API_KEY_PARAM, OPEN_WEATHER_API_KEY).
+                        build();
+
+                // Assign uri to url to be used to open a connection
+                URL url = new URL(uri.toString());
+                Log.v(LOG_TAG, "Built uri: " + url);
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -206,4 +201,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             return null;
         }
     }
+
+    // Open Weather API Key to be used in the uri
+    protected static final String OPEN_WEATHER_API_KEY = "7f1777cc20ba2ac8b65cfafd8145b58c";
 }
