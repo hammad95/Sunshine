@@ -106,13 +106,13 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         // Get the name of the class for the Log messages
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
             // If no zip code, return null
             if(params.length == 0)
                 return null;
@@ -124,6 +124,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
+
+            // Array to hold the parsed JSON weather data
+            String[] weatherForecastArray = null;
 
             // Values for query param keys
             String zipCode = params[0];  // Postal code can be retrieved from params[0]
@@ -204,30 +207,17 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                 }
             }
 
-            return null;
+            // Parse JSON data and store in an array
+            try {
+                weatherForecastArray = getWeatherDataFromJson(forecastJsonStr, numDays);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            // Return a string array of weather forecast data
+            return weatherForecastArray;
         }
 
-        /* The date/time conversion code is going to be moved outside the asynctask later,
- * so for convenience we're breaking it out into its own method now.
- */
-        private String getReadableDateString(long time){
-            // Because the API returns a unix timestamp (measured in seconds),
-            // it must be converted to milliseconds in order to be converted to valid date.
-            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
-            return shortenedDateFormat.format(time);
-        }
-
-        /**
-         * Prepare the weather high/lows for presentation.
-         */
-        private String formatHighLows(double high, double low) {
-            // For presentation, assume the user doesn't care about tenths of a degree.
-            long roundedHigh = Math.round(high);
-            long roundedLow = Math.round(low);
-
-            String highLowStr = roundedHigh + "/" + roundedLow;
-            return highLowStr;
-        }
 
         /**
          * Take the String representing the complete forecast in JSON Format and
@@ -304,6 +294,28 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             }
             return resultStrs;
 
+        }
+
+        /* The date/time conversion code is going to be moved outside the asynctask later,
+ * so for convenience we're breaking it out into its own method now.
+ */
+        private String getReadableDateString(long time){
+            // Because the API returns a unix timestamp (measured in seconds),
+            // it must be converted to milliseconds in order to be converted to valid date.
+            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
+            return shortenedDateFormat.format(time);
+        }
+
+        /**
+         * Prepare the weather high/lows for presentation.
+         */
+        private String formatHighLows(double high, double low) {
+            // For presentation, assume the user doesn't care about tenths of a degree.
+            long roundedHigh = Math.round(high);
+            long roundedLow = Math.round(low);
+
+            String highLowStr = roundedHigh + "/" + roundedLow;
+            return highLowStr;
         }
     }
 
