@@ -11,8 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +71,14 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         ListView listView_forecast = (ListView) rootView.findViewById(
                 R.id.listView_forecast);
         listView_forecast.setAdapter(mForecastAdapter);
+
+        listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), mForecastAdapter.getItem(position),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
