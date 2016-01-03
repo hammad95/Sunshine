@@ -35,8 +35,6 @@ import java.util.List;
  */
 public class ForecastFragment extends android.support.v4.app.Fragment {
 
-    private ArrayAdapter<String> mForecastAdapter; // adapter to populate ListView
-
     public ForecastFragment() {
     }
 
@@ -111,6 +109,11 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         // Get the name of the class for the Log messages
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
+        // Makes an Http "GET" request to the OWM API
+        // and retrieves a JSON string of weather data.
+        // Then calls a method to parse the data and
+        // returns an array of forecast strings to
+        // onPostExecute()
         @Override
         protected String[] doInBackground(String... params) {
             // If no zip code, return null
@@ -157,7 +160,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
                 // Assign uri to url to be used to open a connection
                 URL url = new URL(uri.toString());
-                Log.v(LOG_TAG, "Built uri: " + url);
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -186,8 +188,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
-
-                Log.v(LOG_TAG, "Forecast JSON String: " + forecastJsonStr);
 
             } catch (IOException e) {
                 Log.e("LOG_TAG", "Error ", e);
@@ -218,6 +218,18 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             return weatherForecastArray;
         }
 
+        // Checks if returned array holds data.
+        // If it does, then it clears the ArrayAdapter
+        // and adds each string from the array one by one
+        // into the ArrayAdapter
+        @Override
+        protected void onPostExecute(String[] weatherForecastArray) {
+            if(weatherForecastArray != null) {
+                mForecastAdapter.clear();
+                for(String forecastPerDay : weatherForecastArray)
+                    mForecastAdapter.add(forecastPerDay);
+            }
+        }
 
         /**
          * Take the String representing the complete forecast in JSON Format and
@@ -289,11 +301,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
             return resultStrs;
-
         }
 
         /* The date/time conversion code is going to be moved outside the asynctask later,
@@ -321,4 +329,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
     // Open Weather API Key to be used in the uri
     protected static final String OPEN_WEATHER_API_KEY = "7f1777cc20ba2ac8b65cfafd8145b58c";
+
+    // ArrayAdapter used to populate the ListView
+    ArrayAdapter<String> mForecastAdapter;
 }
