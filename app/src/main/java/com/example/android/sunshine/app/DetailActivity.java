@@ -16,6 +16,7 @@ package com.example.android.sunshine.app;
  * limitations under the License.
  */
 
+import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -66,6 +68,8 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private TextView tvForecast;
+
         public PlaceholderFragment() {
         }
 
@@ -74,6 +78,12 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+
+
+            tvForecast = (TextView) rootView.findViewById(R.id.tvForecast);
+
+
             return rootView;
         }
     }

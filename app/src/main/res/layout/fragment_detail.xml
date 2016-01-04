@@ -9,5 +9,10 @@
     tools:context="com.example.android.sunshine.app.DetailActivityFragment"
     tools:showIn="@layout/activity_detail">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvForecast"/>
+
 
 </RelativeLayout>
