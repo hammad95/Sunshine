@@ -38,7 +38,7 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         // Set Toolbar as default ActionBar
-        setSupportActionBar((Toolbar) findViewById(R.id.detail_activity_toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_detail_activity));
 
         // Get Support ActionBar
         ActionBar actionBar = getSupportActionBar();
