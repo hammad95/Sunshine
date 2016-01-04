@@ -20,7 +20,7 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);  /// NO MENU AS LONG AS THIS IS COMMENTED OUT
     }
 
     @Override

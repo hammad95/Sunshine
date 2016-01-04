@@ -4,24 +4,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -40,9 +25,10 @@ public class MainActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
 
         // Set home button to display app icon in ActionBar
-        ///////////****************DOESN"T WORK*******************//////////////////
+        ///////////****************DOESN'T WORK*******************//////////////////
         if(actionBar != null) {
-            actionBar.setIcon(R.drawable.ic_launcher);
+            actionBar.setLogo(R.drawable.ic_launcher);
+            actionBar.setDisplayUseLogoEnabled(true);
         }
     }
 
