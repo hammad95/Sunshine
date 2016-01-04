@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -33,6 +34,15 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
                     .commit();
+        }
+
+        // Get Support ActionBar
+        ActionBar actionBar = getSupportActionBar();
+
+        // Set home button to display app icon in ActionBar
+        ///////////****************DOESN"T WORK*******************//////////////////
+        if(actionBar != null) {
+            actionBar.setIcon(R.drawable.ic_launcher);
         }
     }
 
