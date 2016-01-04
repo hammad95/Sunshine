@@ -80,7 +80,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                 //        Toast.LENGTH_LONG).show();
                 Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class);
                 detailActivityIntent.putExtra(Intent.EXTRA_TEXT,
-                        mForecastAdapter.getItem(position));
+                mForecastAdapter.getItem(position));
                 startActivity(detailActivityIntent);
             }
         });

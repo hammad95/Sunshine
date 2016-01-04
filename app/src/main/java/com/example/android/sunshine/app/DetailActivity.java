@@ -1,5 +1,3 @@
-package com.example.android.sunshine.app;
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -16,14 +14,16 @@ package com.example.android.sunshine.app;
  * limitations under the License.
  */
 
+package com.example.android.sunshine.app;
+
 import android.content.Intent;
-import android.view.View;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -38,6 +38,23 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        // Receive the intent to be able to access the data
+        Intent intent = getIntent();
+
+        // To extract string from Intent data
+        String forecastString;
+
+        // Get the TextView
+        TextView tvForecast = (TextView) findViewById(R.id.tvForecast);
+
+        // Get the string from the Intent data
+        if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            forecastString = intent.getStringExtra(Intent.EXTRA_TEXT);
+            tvForecast.setText(forecastString);
+        }
+
+
     }
 
 
@@ -68,8 +85,6 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
-        private TextView tvForecast;
-
         public PlaceholderFragment() {
         }
 
@@ -78,12 +93,6 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-
-
-            tvForecast = (TextView) rootView.findViewById(R.id.tvForecast);
-
-
             return rootView;
         }
     }
