@@ -47,6 +47,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        updateWeather();
     }
 
     @Override
@@ -54,20 +55,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // String array with fake data to populate the ListView
-        String[] forecastArray = {
-                "Today - Sunny - 88 / 63",
-                "Tomorrow - Sunny - 68 / 54"
-        };
-
-        // Initialize a List of fake data from the string array
-        List<String> weekForecast = new ArrayList<String>(
-                Arrays.asList(forecastArray));
-
         // Add an ArrayAdapter used to populate the ListView
         mForecastAdapter = new ArrayAdapter<String>(
                 this.getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview,
-                weekForecast
+                new ArrayList<String>()
         );
 
         // Retrieve ListView and set adapter
@@ -75,11 +66,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                 R.id.listView_forecast);
         listView_forecast.setAdapter(mForecastAdapter);
 
+        // Add onItemClickListener to ListView
         listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getActivity(), mForecastAdapter.getItem(position),
-                //        Toast.LENGTH_LONG).show();
                 Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class);
                 detailActivityIntent.putExtra(Intent.EXTRA_TEXT,
                 mForecastAdapter.getItem(position));
@@ -113,23 +103,27 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            // Get shared preferences and store the key/value pair
-            // for ZIP code to execute the AsyncTask with
-            SharedPreferences locationPreferences = PreferenceManager.getDefaultSharedPreferences(
-                    this.getContext()
-            );
-            String zipcode = locationPreferences.getString(
-                    getString(R.string.pref_location_key), getString(R.string.pref_location_default_val)
-            );
-
-            // Create an instance of FetchWeatherTask and send the retrieved String
-            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute(zipcode);
-            
+            // Call update weather to fetch weather from OWM
+            updateWeather();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateWeather() {
+        // Get shared preferences and store the key/value pair
+        // for ZIP code to execute the AsyncTask with
+        SharedPreferences locationPreferences = PreferenceManager.getDefaultSharedPreferences(
+                this.getContext()
+        );
+        String zipcode = locationPreferences.getString(
+                getString(R.string.pref_location_key), getString(R.string.pref_location_default_val)
+        );
+
+        // Create an instance of FetchWeatherTask and send the retrieved String
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.execute(zipcode);
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
