@@ -1,9 +1,11 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -111,8 +113,19 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            // Get shared preferences and store the key/value pair
+            // for ZIP code to execute the AsyncTask with
+            SharedPreferences locationPreferences = PreferenceManager.getDefaultSharedPreferences(
+                    this.getContext()
+            );
+            String zipcode = locationPreferences.getString(
+                    getString(R.string.pref_location_key), getString(R.string.pref_location_default_val)
+            );
+
+            // Create an instance of FetchWeatherTask and send the retrieved String
             FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute("11230");
+            fetchWeatherTask.execute(zipcode);
+            
             return true;
         }
 
