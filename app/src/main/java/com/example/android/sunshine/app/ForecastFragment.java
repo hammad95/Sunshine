@@ -112,12 +112,12 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
     }
 
     private void updateWeather() {
-        // Get shared preferences and store the key/value pair
+        // Get default SharedPreferences and store the key/value pair
         // for ZIP code to execute the AsyncTask with
-        SharedPreferences locationPreferences = PreferenceManager.getDefaultSharedPreferences(
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 this.getContext()
         );
-        String zipcode = locationPreferences.getString(
+        String zipcode = defaultSharedPreferences.getString(
                 getString(R.string.pref_location_key), getString(R.string.pref_location_default_val)
         );
 
@@ -320,6 +320,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                 double low = temperatureObject.getDouble(OWM_MIN);
 
                 highAndLow = formatHighLows(high, low);
+
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
@@ -340,6 +341,18 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
          * Prepare the weather high/lows for presentation.
          */
         private String formatHighLows(double high, double low) {
+            // Get the selected temperature units from SharedPreferences
+            String units = defaultSharedPreferences.getString(getString(R.string.pref_temp_units_key),
+                    getString(R.string.pref_temp_units_default_val));
+
+            Log.v(LOG_TAG, "*******************Value of returned Preference: " + units);
+
+            // If selected unit is "Fahrenheit", covert to Fahrenheit
+            if(units.equals(getString(R.string.pref_units_fahrenheit))) {
+                high = high * 1.8 + 32;
+                low = low * 1.8 + 32;
+            }
+
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
@@ -347,11 +360,20 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
         }
+
+        private void convertToFahrenheit(Double temp) {
+
+
+            return;
+        }
     }
 
     // Open Weather API Key to be used in the uri
     protected static final String OPEN_WEATHER_API_KEY = "7f1777cc20ba2ac8b65cfafd8145b58c";
 
     // ArrayAdapter used to populate the ListView
-    ArrayAdapter<String> mForecastAdapter;
+    private ArrayAdapter<String> mForecastAdapter;
+
+    // Default SharedPreferences
+    private SharedPreferences defaultSharedPreferences;
 }
