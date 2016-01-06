@@ -109,7 +109,8 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         }
 
         if(id == R.id.action_map) {
-            
+            // Call helper method to show the preferred location on a map
+            showPreferredLocationOnMap();
         }
 
         return super.onOptionsItemSelected(item);
@@ -128,6 +129,26 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         // Create an instance of FetchWeatherTask and send the retrieved String
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         fetchWeatherTask.execute(zipcode);
+    }
+
+    // Starts an implicit intent to show the user's preferred location on a map
+    private void showPreferredLocationOnMap() {
+        String zipcode = defaultSharedPreferences.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default_val));
+
+        // Query parameter keys
+        final String QUERY_PARAM = "q";
+
+        Uri uri = Uri.parse("geo:0,0?").buildUpon().
+                appendQueryParameter(QUERY_PARAM, zipcode).
+                build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+
+        // First check if there is an app available on the device to handle the intent
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null)
+            startActivity(intent);
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
