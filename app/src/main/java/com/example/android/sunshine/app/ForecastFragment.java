@@ -108,6 +108,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             return true;
         }
 
+        if(id == R.id.action_map) {
+            
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
