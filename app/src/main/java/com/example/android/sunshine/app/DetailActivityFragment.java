@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A placeholder fragment to populate DetailActivity
  */
 public class DetailActivityFragment extends Fragment {
 
@@ -20,7 +21,7 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);  /// NO MENU AS LONG AS THIS IS COMMENTED OUT
+        setHasOptionsMenu(true); /// NO MENU AS LONG AS THIS IS COMMENTED OUT:
     }
 
     @Override
@@ -31,6 +32,9 @@ public class DetailActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Clear the Menu first to avoid duplicates
+        menu.clear();
+
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detail, menu);
     }
@@ -44,9 +48,12 @@ public class DetailActivityFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this.getContext(), SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
