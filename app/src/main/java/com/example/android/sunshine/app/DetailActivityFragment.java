@@ -34,6 +34,9 @@ public class DetailActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Clear the menu first to avoid duplicates
+        menu.clear();
+
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detailfragment, menu);
 
