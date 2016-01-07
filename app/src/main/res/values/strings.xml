@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_map" translatable="false">Map</string>
+    <string name="action_share" translatable="false">Share</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
 

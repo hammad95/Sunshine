@@ -62,4 +62,7 @@ public class DetailActivity extends ActionBarActivity {
             tvForecast.setText(forecastString);
         }
     }
+
+    // Getter method for string passed as Intent data
+    
 }
