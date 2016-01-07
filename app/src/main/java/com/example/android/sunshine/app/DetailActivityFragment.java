@@ -34,9 +34,6 @@ public class DetailActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Clear the Menu first to avoid duplicates
-        menu.clear();
-
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detailfragment, menu);
 
@@ -44,6 +41,10 @@ public class DetailActivityFragment extends Fragment {
         MenuItem action_share = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(action_share);
+
+        // Attach an intent to this ShareActionProvider
+        if(mShareActionProvider != null)
+            mShareActionProvider.setShareIntent(createForecastShareIntent());
     }
 
     @Override
@@ -60,22 +61,20 @@ public class DetailActivityFragment extends Fragment {
             return true;
         }
 
-        if(id == R.id.action_share) {
-            startShareIntent();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void startShareIntent() {
+    private Intent createForecastShareIntent() {
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, "What's Up?");
-        mShareActionProvider.setShareIntent(intent);
+        intent.setType("text/plain");
 
-        // First check if there is an app available on the device to handle the intent
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null)
-            startActivity(intent);
+        intent.putExtra(Intent.EXTRA_TEXT, DetailActivity.forecastString + " " + SUNSHINE_HASHTAG);
+
+        return intent;
     }
+
+    // A string constant for Sunshine Hashtag for the share intent
+    private final String SUNSHINE_HASHTAG = "#SunshineApp";
 
     // For use in creating an implicit share intent
     private ShareActionProvider mShareActionProvider;
