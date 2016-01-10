@@ -41,6 +41,19 @@ public class WeatherContract {
     public static final class LocationEntry implements BaseColumns {
         public static final String TABLE_NAME = "location";
 
+        // The location setting string that will be sent to OWM as the
+        // location query
+        public static final String COLUMN_LOCATION_SETTINGS = "location_settings";
+
+        // Name of city in human readable format rather than a ZIP code
+        public static final String COLUMN_CITY_NAME = "city_name";
+
+        // Latitude and longitude to pinpoint the exact location on the map
+        // when we start an implicit map intent. We store them as returned
+        // by OWM
+        public static final String COLUMN_COORD_LAT = "coord_lat";
+        public static final String COLUMN_COORD_LONG = "coord_long";
+
     }
 
     /* Inner class that defines the table contents of the weather table */
