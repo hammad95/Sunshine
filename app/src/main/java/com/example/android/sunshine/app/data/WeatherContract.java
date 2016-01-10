@@ -43,7 +43,7 @@ public class WeatherContract {
 
         // The location setting string that will be sent to OWM as the
         // location query
-        public static final String COLUMN_LOCATION_SETTINGS = "location_settings";
+        public static final String COLUMN_LOCATION_SETTING = "location_setting";
 
         // Name of city in human readable format rather than a ZIP code
         public static final String COLUMN_CITY_NAME = "city_name";
