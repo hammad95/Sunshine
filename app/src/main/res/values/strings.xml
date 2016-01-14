@@ -16,9 +16,9 @@
     <string name="pref_location_default_val" translatable="false">11230</string>
 
     <!--string values for the temp_units Preference-->
-    <string name="pref_temp_units_title">Temperature Units</string>
-    <string name="pref_temp_units_key" translatable="false">temp_units</string>
-    <string name="pref_temp_units_default_val" translatable="false">celsius</string>
-    <string name="pref_units_fahrenheit" translatable="false">fahrenheit</string>
+    <string name="pref_units_title">Temperature Units</string>
+    <string name="pref_units_key" translatable="false">temp_units</string>
+    <string name="pref_units_metric" translatable="false">celsius</string>
+    <string name="pref_units_imperial" translatable="false">fahrenheit</string>
 
 </resources>

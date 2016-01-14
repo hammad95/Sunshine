@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -375,13 +374,13 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
          */
         private String formatHighLows(double high, double low) {
             // Get the selected temperature units from SharedPreferences
-            String units = defaultSharedPreferences.getString(getString(R.string.pref_temp_units_key),
-                    getString(R.string.pref_temp_units_default_val));
+            String units = defaultSharedPreferences.getString(getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_metric));
 
             Log.v(LOG_TAG, "*******************Value of returned Preference: " + units);
 
             // If selected unit is "Fahrenheit", covert to Fahrenheit
-            if(units.equals(getString(R.string.pref_units_fahrenheit))) {
+            if(units.equals(getString(R.string.pref_units_imperial))) {
                 high = high * 1.8 + 32;
                 low = low * 1.8 + 32;
             }
