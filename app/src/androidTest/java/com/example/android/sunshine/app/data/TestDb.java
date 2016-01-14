@@ -111,7 +111,7 @@ public class TestDb extends AndroidTestCase {
         where you can uncomment out the "createNorthPoleLocationValues" function.  You can
         also make use of the ValidateCurrentRecord function from within TestUtilities.
     */
-    public void testLocationTable() {
+    public long testLocationTable() {
         // Test data we're going to insert into the DB to see if it works.
         String testLocationSetting = "99705";
         String testCityName = "North Pole";
@@ -131,10 +131,10 @@ public class TestDb extends AndroidTestCase {
         contentValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, testLongitude);
 
         // Insert ContentValues into database and get a row ID back
-        long rowID = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, contentValues);
+        long locationRowID = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, contentValues);
 
         // Verify we got a row back.
-        assertTrue(rowID != -1);
+        assertTrue(locationRowID != -1);
 
         // Query the database and receive a Cursor back
         Cursor c = db.query(WeatherContract.LocationEntry.TABLE_NAME, null, null, null, null,
@@ -157,6 +157,7 @@ public class TestDb extends AndroidTestCase {
         c.close();
         db.close();
 
+        return locationRowID;
     }
 
     /*
@@ -165,7 +166,7 @@ public class TestDb extends AndroidTestCase {
         where you can use the "createWeatherValues" function.  You can
         also make use of the validateCurrentRecord function from within TestUtilities.
      */
-    public void testWeatherTable() {
+    public void testWeatherTable(long locationRowID) {
         // First insert the location, and then use the locationRowId to insert
         // the weather. Make sure to cover as many failure cases as you can.
 
