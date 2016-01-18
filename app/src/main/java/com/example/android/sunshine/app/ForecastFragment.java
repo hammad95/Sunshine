@@ -158,9 +158,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             startActivity(intent);
     }
 
-    // Open Weather API Key to be used in the uri
-    protected static final String OPEN_WEATHER_API_KEY = "7f1777cc20ba2ac8b65cfafd8145b58c";
-
     // ArrayAdapter used to populate the ListView
     private ArrayAdapter<String> mForecastAdapter;
 

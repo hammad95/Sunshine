@@ -326,16 +326,18 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             // http://openweathermap.org/API#forecast
             final String FORECAST_BASE_URL =
                     "http://api.openweathermap.org/data/2.5/forecast/daily?";
-            final String QUERY_PARAM = "q";
+            final String ZIP_PARAM = "zip";
             final String FORMAT_PARAM = "mode";
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
+            final String API_KEY_PARAM = "appid";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_PARAM, params[0])
+                    .appendQueryParameter(ZIP_PARAM, params[0])
                     .appendQueryParameter(FORMAT_PARAM, format)
                     .appendQueryParameter(UNITS_PARAM, units)
                     .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                    .appendQueryParameter(API_KEY_PARAM, OPEN_WEATHER_API_KEY)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -405,4 +407,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             // New data is back from the server.  Hooray!
         }
     }
+
+    // Open Weather API Key to be used in the uri
+    protected static final String OPEN_WEATHER_API_KEY = "7f1777cc20ba2ac8b65cfafd8145b58c";
 }
