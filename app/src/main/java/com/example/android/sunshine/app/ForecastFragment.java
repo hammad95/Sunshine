@@ -2,6 +2,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.android.sunshine.app.data.WeatherContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,11 +55,23 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+
+        // Sort order:  Ascending, by date.
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+                null, null, null, sortOrder);
+
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
+
         // Add an ArrayAdapter used to populate the ListView
-        mForecastAdapter = new ArrayAdapter<String>(
-                this.getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview,
-                new ArrayList<String>()
-        );
+//        mForecastAdapter = new ArrayAdapter<String>(
+//                this.getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview,
+//                new ArrayList<String>()
+//        );
 
         // Retrieve ListView and set adapter
         ListView listView_forecast = (ListView) rootView.findViewById(
@@ -64,15 +79,15 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         listView_forecast.setAdapter(mForecastAdapter);
 
         // Add onItemClickListener to ListView
-        listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class);
-                detailActivityIntent.putExtra(Intent.EXTRA_TEXT,
-                mForecastAdapter.getItem(position));
-                startActivity(detailActivityIntent);
-            }
-        });
+//        listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class);
+//                detailActivityIntent.putExtra(Intent.EXTRA_TEXT,
+//                mForecastAdapter.getItem(position));
+//                startActivity(detailActivityIntent);
+//            }
+//        });
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -134,7 +149,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         );
 
         // Create an instance of FetchWeatherTask and send the retrieved String
-        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getContext(), mForecastAdapter);
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getContext());
         fetchWeatherTask.execute(zipcode);
     }
 
@@ -159,7 +174,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
     }
 
     // ArrayAdapter used to populate the ListView
-    private ArrayAdapter<String> mForecastAdapter;
+    private ForecastAdapter mForecastAdapter;
 
     // Default SharedPreferences
     private SharedPreferences defaultSharedPreferences;
