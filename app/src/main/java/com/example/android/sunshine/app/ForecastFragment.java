@@ -34,11 +34,17 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v4.content.CursorLoader;
+
 /**
  * Fragment to be used by MainActivity
  * Created by Hassan on 12/30/2015.
  */
-public class ForecastFragment extends android.support.v4.app.Fragment {
+public class ForecastFragment extends android.support.v4.app.Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public ForecastFragment() {
     }
@@ -55,23 +61,14 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String locationSetting = Utility.getPreferredLocation(getActivity());
-
-        // Sort order:  Ascending, by date.
-        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
-        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
-                locationSetting, System.currentTimeMillis());
-
-        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
-                null, null, null, sortOrder);
-
-        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
-
         // Add an ArrayAdapter used to populate the ListView
 //        mForecastAdapter = new ArrayAdapter<String>(
 //                this.getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview,
 //                new ArrayList<String>()
 //        );
+
+        // Create a new ForecastAdapter, which is a CursorAdapter
+        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         // Retrieve ListView and set adapter
         ListView listView_forecast = (ListView) rootView.findViewById(
@@ -151,6 +148,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
         // Create an instance of FetchWeatherTask and send the retrieved String
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getContext());
         fetchWeatherTask.execute(zipcode);
+
+        // Initialize the CursorLoader
+        getActivity().getSupportLoaderManager().initLoader(FORECAST_LOADER, null, this);
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
@@ -173,9 +173,61 @@ public class ForecastFragment extends android.support.v4.app.Fragment {
             startActivity(intent);
     }
 
+    // CurosorLoader callback methods
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        // Compare the id of the loader
+
+        switch(id) {
+            case FORECAST_LOADER:
+
+                String locationSetting = Utility.getPreferredLocation(getActivity());
+
+                // Sort order:  Ascending, by date.
+                String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+                Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                        locationSetting, System.currentTimeMillis());
+
+                return new CursorLoader(this.getContext(),
+                        weatherForLocationUri,
+                        null,
+                        null,
+                        null,
+                        sortOrder);
+
+            default:
+
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        // Move the query results into the adapter causing the assoiated ListView
+        // to redisplay its contents
+        mForecastAdapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // Delete the adapter' reference to the cursor to prevent mo=emory leak
+        mForecastAdapter.changeCursor(null);
+    }
+
+    // Variables and Constants
+
     // ArrayAdapter used to populate the ListView
     private ForecastAdapter mForecastAdapter;
 
     // Default SharedPreferences
     private SharedPreferences defaultSharedPreferences;
+
+    // CursorLoader for querying the ContentResolver
+    private CursorLoader cLoader;
+
+    // CursorLoader ID
+    private final int FORECAST_LOADER = 100;
 }
