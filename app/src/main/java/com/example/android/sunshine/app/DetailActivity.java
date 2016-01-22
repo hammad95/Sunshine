@@ -16,14 +16,12 @@
 
 package com.example.android.sunshine.app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
+
+import com.example.android.sunshine.app.data.WeatherContract;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -48,20 +46,5 @@ public class DetailActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(R.drawable.ic_launcher);
         }
-
-        // Receive the intent to be able to access the data
-        Intent intent = getIntent();
-
-        // Get the TextView
-        TextView tvForecast = (TextView) findViewById(R.id.tvForecast);
-
-        // Get the string from the Intent data
-        if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            forecastString = intent.getStringExtra(Intent.EXTRA_TEXT);
-            tvForecast.setText(forecastString);
-        }
     }
-
-    // String to hold forecast sent in Intent.EXTRAS
-    static String forecastString;
 }

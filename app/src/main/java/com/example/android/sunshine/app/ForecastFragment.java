@@ -61,12 +61,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Add an ArrayAdapter used to populate the ListView
-//        mForecastAdapter = new ArrayAdapter<String>(
-//                this.getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview,
-//                new ArrayList<String>()
-//        );
-
         // Create a new ForecastAdapter, which is a CursorAdapter
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
@@ -76,15 +70,22 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         listView_forecast.setAdapter(mForecastAdapter);
 
         // Add onItemClickListener to ListView
-//        listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class);
-//                detailActivityIntent.putExtra(Intent.EXTRA_TEXT,
-//                mForecastAdapter.getItem(position));
-//                startActivity(detailActivityIntent);
-//            }
-//        });
+        listView_forecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                            ));
+                    startActivity(intent);
+                }
+            }
+        });
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -95,6 +96,15 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         String forecastJsonStr = null;
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        // Initialize the CursorLoader
+        getActivity().getSupportLoaderManager().initLoader(FORECAST_LOADER, null, this);
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -148,9 +158,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         // Create an instance of FetchWeatherTask and send the retrieved String
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getContext());
         fetchWeatherTask.execute(zipcode);
-
-        // Initialize the CursorLoader
-        getActivity().getSupportLoaderManager().initLoader(FORECAST_LOADER, null, this);
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
@@ -192,7 +199,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
                 return new CursorLoader(this.getContext(),
                         weatherForLocationUri,
-                        null,
+                        FORECAST_COLUMNS,
                         null,
                         null,
                         sortOrder);
@@ -225,9 +232,36 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     // Default SharedPreferences
     private SharedPreferences defaultSharedPreferences;
 
-    // CursorLoader for querying the ContentResolver
-    private CursorLoader cLoader;
-
     // CursorLoader ID
     private final int FORECAST_LOADER = 100;
+
+    static final String[] FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
 }
