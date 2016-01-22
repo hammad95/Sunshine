@@ -53,7 +53,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        updateWeather();
     }
 
     @Override
@@ -143,6 +142,14 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onLocationChanged() {
+        // Update the weather
+        updateWeather();
+
+        // Restart the loader
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     private void updateWeather() {
