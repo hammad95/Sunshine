@@ -103,7 +103,7 @@ public class ForecastAdapter extends CursorAdapter {
         viewHolder.iconView.setImageResource(R.drawable.ic_launcher);
 
         // Read date from cursor
-        long date = cursor.getInt(ForecastFragment.COL_WEATHER_DATE);
+        long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         // Assign date to TextView
         viewHolder.dateView.setText(Utility.getFriendlyDayString(mContext, date));
 

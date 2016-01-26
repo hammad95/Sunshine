@@ -19,12 +19,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utility {
+
+    private static final String LOG_TAG = Utility.class.getSimpleName();
+
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_location_key),
@@ -71,10 +75,10 @@ public class Utility {
         // For tomorrow:  "Tomorrow"
         // For the next 5 days: "Wednesday" (just the day name)
         // For all days after that: "Mon Jun 8"
-
         Time time = new Time();
         time.setToNow();
         long currentTime = System.currentTimeMillis();
+
         int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
         int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
 
@@ -83,10 +87,13 @@ public class Utility {
         if (julianDay == currentJulianDay) {
             String today = context.getString(R.string.today);
             int formatId = R.string.format_full_friendly_date;
-            return String.format(context.getString(
+
+            String stringToReturn =
+                String.format(context.getString(
                     formatId,
                     today,
                     getFormattedMonthDay(context, dateInMillis)));
+            return stringToReturn;
         } else if ( julianDay < currentJulianDay + 7 ) {
             // If the input date is less than a week in the future, just return the day name.
             return getDayName(context, dateInMillis);
