@@ -31,7 +31,7 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_detail, new DetailActivityFragment())
+                    .add(R.id.container_content_detail, new DetailActivityFragment())
                     .commit();
         }
 

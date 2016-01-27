@@ -42,15 +42,15 @@ public class DetailActivityFragment extends Fragment
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
-        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_day_textview);
-        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_forecast_textview);
-        mHighTempView = (TextView) rootView.findViewById(R.id.detail_high_textview);
-        mLowTempView = (TextView) rootView.findViewById(R.id.detail_low_textview);
-        mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
-        mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
-        mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+//        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+//        mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
+//        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_day_textview);
+//        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_forecast_textview);
+//        mHighTempView = (TextView) rootView.findViewById(R.id.detail_high_textview);
+//        mLowTempView = (TextView) rootView.findViewById(R.id.detail_low_textview);
+//        mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
+//        mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
+//        mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         return rootView;
     }
 
@@ -142,47 +142,42 @@ public class DetailActivityFragment extends Fragment
 
         // Read weather condition id to decide which image to display
         int weatherConditionId = data.getInt(COL_WEATHER_CONDITION_ID);
-
         // For now, use place holder image
-        mIconView.setImageResource(R.drawable.ic_launcher);
+//        mIconView.setImageResource(R.drawable.ic_launcher);
 
-        long date = data.getLong(COL_WEATHER_DATE);
-        String friendlyDateText = Utility.getDayName(getActivity(), date);
-        String dateText = Utility.getFormattedMonthDay(getActivity(), date);
-        mFriendlyDateView.setText(friendlyDateText);
-        mDateView.setText(dateText);
+//        long date = data.getLong(COL_WEATHER_DATE);
+//        String friendlyDateText = Utility.getDayName(getActivity(), date);
+//        String dateText = Utility.getFormattedMonthDay(getActivity(), date);
+//        mFriendlyDateView.setText(friendlyDateText);
+//        mDateView.setText(dateText);
+//
+//        String weatherDescription =
+//                data.getString(COL_WEATHER_DESC);
+//        mDescriptionView.setText(weatherDescription);
+//
+//        boolean isMetric = Utility.isMetric(getActivity());
+//        String high = Utility.formatTemperature(getContext(),
+//                data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+//        mHighTempView.setText(high);
+//
+//        String low = Utility.formatTemperature(getContext(),
+//                data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+//        mLowTempView.setText(low);
+//
+//        // Set the humidity
+//        float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
+//        mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+//
+//        // Set the wind speed and direction
+//        float windSpeed = data.getFloat(COL_WEATHER_WIND_SPEED);
+//        float windDirection = data.getFloat(COL_WEATHER_DEGREES);
+//        mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeed, windDirection));
+//
+//        // Set the pressure
+//        float pressure = data.getFloat(COL_WEATHER_PRESSURE);
+//        mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
 
-        String weatherDescription =
-                data.getString(COL_WEATHER_DESC);
-
-        mDescriptionView.setText(weatherDescription);
-
-        boolean isMetric = Utility.isMetric(getActivity());
-
-        String high = Utility.formatTemperature(getContext(),
-                data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
-
-        mHighTempView.setText(high);
-
-        String low = Utility.formatTemperature(getContext(),
-                data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
-
-        mLowTempView.setText(low);
-
-        // Set the humidity
-        float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
-        mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
-
-        // Set the wind speed and direction
-        float windSpeed = data.getFloat(COL_WEATHER_WIND_SPEED);
-        float windDirection = data.getFloat(COL_WEATHER_DEGREES);
-        mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeed, windDirection));
-
-        // Set the pressure
-        float pressure = data.getFloat(COL_WEATHER_PRESSURE);
-        mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
-
-        forecastString = String.format("%s - %s - %s/%s", dateText, weatherDescription, high, low);
+//        forecastString = String.format("%s - %s - %s/%s", dateText, weatherDescription, high, low);
 
         // If onCreateOptionsMenu has already happened, we need to update the share intent now.
         if (mShareActionProvider != null) {
