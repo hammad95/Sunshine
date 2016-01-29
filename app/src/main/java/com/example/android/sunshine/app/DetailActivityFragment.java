@@ -143,7 +143,7 @@ public class DetailActivityFragment extends Fragment
         // Read weather condition id to decide which image to display
         int weatherConditionId = data.getInt(COL_WEATHER_CONDITION_ID);
         // Get the id of the right image based on the condition code
-        int weatherIcon = Utility.getIconResourceForWeatherCondition(weatherConditionId);
+        int weatherIcon = Utility.getArtResourceForWeatherCondition(weatherConditionId);
         // Set the image to the ImageView
         mIconView.setImageResource(weatherIcon);
 
