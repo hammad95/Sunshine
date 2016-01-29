@@ -142,8 +142,10 @@ public class DetailActivityFragment extends Fragment
 
         // Read weather condition id to decide which image to display
         int weatherConditionId = data.getInt(COL_WEATHER_CONDITION_ID);
-        // For now, use place holder image
-        mIconView.setImageResource(R.drawable.ic_launcher);
+        // Get the id of the right image based on the condition code
+        int weatherIcon = Utility.getIconResourceForWeatherCondition(weatherConditionId);
+        // Set the image to the ImageView
+        mIconView.setImageResource(weatherIcon);
 
         long date = data.getLong(COL_WEATHER_DATE);
         String friendlyDateText = Utility.getDayName(getActivity(), date);
