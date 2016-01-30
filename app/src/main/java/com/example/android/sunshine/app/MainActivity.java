@@ -15,21 +15,33 @@ public class MainActivity extends ActionBarActivity {
     // Fragment tag for the forecast fragment
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
+    // To figure out whether or not to display the two-pane mode
+    private boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v(LOG_TAG, "############## onCreate() called ####################");
-
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
-        }
-
         // Initialize mLocation to store the current location from preferences
         mLocation = Utility.getPreferredLocation(this);
+
+        setContentView(R.layout.activity_main);
+        if (findViewById(R.id.container_content_detail) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailActivityFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
 
         // Get Support ActionBar
         ActionBar actionBar = getSupportActionBar();
