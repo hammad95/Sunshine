@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
     private String mLocation;
 
     // Fragment tag for the forecast fragment
-    private final String FORECASTFRAGMENT_TAG = "FORECAST_FRAGMENT";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
 
         if(userLocation != null && !userLocation.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().
-                    findFragmentByTag(FORECASTFRAGMENT_TAG);
+                    findFragmentById(R.id.fragment_forecast);
             if(ff != null)
                 ff.onLocationChanged();
 
