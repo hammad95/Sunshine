@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
             // fragment transaction.
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.weather_detail_container, new DetailActivityFragment(), DETAILFRAGMENT_TAG)
+                        .replace(R.id.container_content_detail, new DetailActivityFragment(), DETAILFRAGMENT_TAG)
                         .commit();
             }
         } else {
