@@ -41,6 +41,11 @@ public class DetailActivityFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // Get the data from the frgamnet
+        Bundle args = getArguments();
+        if(args != null)
+            mUri = args.getParcelable(DETAIL_URI);
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
@@ -110,24 +115,21 @@ public class DetailActivityFragment extends Fragment
         // Compare the id of the loader
 
         Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent == null || intent.getData() == null) {
-            return null;
-        }
 
         switch (id) {
             case DETAIL_LOADER:
-
-                // Now create and return a CursorLoader that will take care of
-                // creating a Cursor for the data being displayed.
-                return new CursorLoader(
-                        getContext(),
-                        intent.getData(),
-                        DETAIL_COLUMNS,
-                        null,
-                        null,
-                        null
-                );
+                if(mUri != null) {
+                    // Now create and return a CursorLoader that will take care of
+                    // creating a Cursor for the data being displayed.
+                    return new CursorLoader(
+                            getContext(),
+                            mUri,
+                            DETAIL_COLUMNS,
+                            null,
+                            null,
+                            null
+                    );
+                }
 
             default:
                 return null;
@@ -233,6 +235,8 @@ public class DetailActivityFragment extends Fragment
     // A string constant for Sunshine Hashtag for the share intent
     private final String SUNSHINE_HASHTAG = "#SunshineApp";
 
+    static final String DETAIL_URI = "URI";
+
     // For use in creating an implicit share intent
     private ShareActionProvider mShareActionProvider;
 
@@ -241,6 +245,9 @@ public class DetailActivityFragment extends Fragment
 
     // String to hold forecast sent in Intent.EXTRAS
     private String forecastString;
+
+    // Uri passed in Intent, used by the CursorLoader
+    private Uri mUri;
 
     // Views to populate from Cursor data
     private ImageView mIconView;

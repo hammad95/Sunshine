@@ -30,6 +30,21 @@ public class DetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
+
+            // In case the DetailActivity is launched, i.e., device is not
+            // in dual-pane mode
+
+            // Create a DetailActivityFragment and add it to the activity
+            // using a FragmentTransaction
+
+            // Get the data from the intent and set it as the argument
+            // to the DetailActivityFragment
+            Bundle args = new Bundle();
+            args.putParcelable(DetailActivityFragment.DETAIL_URI, getIntent().getData());
+
+            DetailActivityFragment detailActivityFragment = new DetailActivityFragment();
+            detailActivityFragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container_content_detail, new DetailActivityFragment())
                     .commit();

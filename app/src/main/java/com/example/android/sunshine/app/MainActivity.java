@@ -1,11 +1,13 @@
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback{
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -103,5 +105,27 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
 
         Log.v(LOG_TAG, "############## onDestroy() called ####################");
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if(mTwoPane) {
+            // In two-pane mode, replace the preexisting DetailActivityFragment
+            // using a FragmentTransaction
+            Bundle args = new Bundle();
+            args.putParcelable(DetailActivityFragment.DETAIL_URI, contentUri);
+
+            DetailActivityFragment detailActivityFragment = new DetailActivityFragment();
+            detailActivityFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.container_content_detail, detailActivityFragment, DETAILFRAGMENT_TAG).
+                    commit();
+        }
+        else {
+            Intent detailActivityIntent = new Intent(this, DetailActivity.class).
+                    setData(contentUri);
+            startActivity(detailActivityIntent);
+        }
     }
 }
