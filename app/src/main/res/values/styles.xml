@@ -14,4 +14,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ForecastListStyle">
+        <!--No need for choice mode in single-pane mode-->
+    </style>
+
 </resources>
