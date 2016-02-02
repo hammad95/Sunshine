@@ -110,6 +110,17 @@ public class DetailActivityFragment extends Fragment
         return intent;
     }
 
+    void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (null != uri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Compare the id of the loader
