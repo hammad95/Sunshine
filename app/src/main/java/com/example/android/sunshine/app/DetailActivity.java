@@ -46,7 +46,7 @@ public class DetailActivity extends ActionBarActivity {
             detailActivityFragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_content_detail, new DetailActivityFragment())
+                    .add(R.id.container_content_detail, detailActivityFragment)
                     .commit();
         }
 
