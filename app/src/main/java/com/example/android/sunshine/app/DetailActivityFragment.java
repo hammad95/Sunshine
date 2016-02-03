@@ -198,8 +198,6 @@ public class DetailActivityFragment extends Fragment
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createForecastShareIntent());
         }
-
-        data.close();
     }
 
     @Override
