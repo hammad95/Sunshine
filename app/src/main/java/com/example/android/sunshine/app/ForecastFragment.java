@@ -46,6 +46,57 @@ import android.support.v4.content.CursorLoader;
 public class ForecastFragment extends android.support.v4.app.Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
+
+    // Variables and Constants
+
+    // ListView to display weather forecast data
+    private ListView listView_forecast;
+
+    // ArrayAdapter used to populate the ListView
+    private ForecastAdapter mForecastAdapter;
+
+    // Default SharedPreferences
+    private SharedPreferences defaultSharedPreferences;
+
+    // CursorLoader ID
+    private final int FORECAST_LOADER = 100;
+
+    // ListView position to be retrieved from savedInstanceState
+    private int mPosition;
+
+    // Key for the position of the ListView for saving in savedInstanceState Bundle
+    private final String POSITION_KEY = "POSITION";
+
+    static final String[] FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
+
     public ForecastFragment() {
     }
 
@@ -64,7 +115,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         // Retrieve ListView and set adapter
-        ListView listView_forecast = (ListView) rootView.findViewById(
+        listView_forecast = (ListView) rootView.findViewById(
                 R.id.listView_forecast);
         listView_forecast.setAdapter(mForecastAdapter);
 
@@ -82,8 +133,15 @@ public class ForecastFragment extends android.support.v4.app.Fragment
                                     locationSetting, cursor.getLong(COL_WEATHER_DATE)
                             ));
                 }
+                // Save the position of the ListView
+                mPosition = position;
             }
         });
+
+        // Retrieve the position of the ListView from the Bundle if the
+        // saveInstanceState is not null and it contains the position
+        if(savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY))
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
 
         return rootView;
     }
@@ -133,6 +191,18 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outstate) {
+        // When tablet rotates, the current position of the ListView needs
+        // to be saved so that it can be restored upon creating a new
+        // activity. If no position was selected, mPosition will be equal
+        // to ListView.INVALID_POSITION, so check for that first
+        if(mPosition != ListView.INVALID_POSITION) {
+            outstate.putInt(POSITION_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outstate);
     }
 
     public void onLocationChanged() {
@@ -214,6 +284,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         // Move the query results into the adapter causing the assoiated ListView
         // to redisplay its contents
         mForecastAdapter.changeCursor(data);
+
+        // Scroll to saved ListView position if tablet is rotated
+        if(mPosition != ListView.INVALID_POSITION)
+            listView_forecast.smoothScrollToPosition(mPosition);
     }
 
     @Override
@@ -233,45 +307,4 @@ public class ForecastFragment extends android.support.v4.app.Fragment
          */
         public void onItemSelected(Uri dateUri);
     }
-
-    // Variables and Constants
-
-    // ArrayAdapter used to populate the ListView
-    private ForecastAdapter mForecastAdapter;
-
-    // Default SharedPreferences
-    private SharedPreferences defaultSharedPreferences;
-
-    // CursorLoader ID
-    private final int FORECAST_LOADER = 100;
-
-    static final String[] FORECAST_COLUMNS = {
-            // In this case the id needs to be fully qualified with a table name, since
-            // the content provider joins the location & weather tables in the background
-            // (both have an _id column)
-            // On the one hand, that's annoying.  On the other, you can search the weather table
-            // using the location set by the user, which is only in the Location table.
-            // So the convenience is worth it.
-            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
-            WeatherContract.WeatherEntry.COLUMN_DATE,
-            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
-            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
-            WeatherContract.LocationEntry.COLUMN_COORD_LONG
-    };
-
-    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
-    // must change.
-    static final int COL_WEATHER_ID = 0;
-    static final int COL_WEATHER_DATE = 1;
-    static final int COL_WEATHER_DESC = 2;
-    static final int COL_WEATHER_MAX_TEMP = 3;
-    static final int COL_WEATHER_MIN_TEMP = 4;
-    static final int COL_LOCATION_SETTING = 5;
-    static final int COL_WEATHER_CONDITION_ID = 6;
-    static final int COL_COORD_LAT = 7;
-    static final int COL_COORD_LONG = 8;
 }
