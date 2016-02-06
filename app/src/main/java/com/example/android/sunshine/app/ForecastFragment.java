@@ -67,6 +67,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     // Key for the position of the ListView for saving in savedInstanceState Bundle
     private final String POSITION_KEY = "POSITION";
 
+    // Decides whether the special today list item should be shown
+    private boolean mShowSpecialTodayItem;
+
     static final String[] FORECAST_COLUMNS = {
             // In this case the id needs to be fully qualified with a table name, since
             // the content provider joins the location & weather tables in the background
@@ -113,6 +116,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
         // Create a new ForecastAdapter, which is a CursorAdapter
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        // Call setShowSpecialTodayItem() to ensure that as soon as an instance
+        // of ForecastAdapter is instantiated, the appropriate value is passed
+        mForecastAdapter.setShowSpecialTodayItem(mShowSpecialTodayItem);
 
         // Retrieve ListView and set adapter
         listView_forecast = (ListView) rootView.findViewById(
@@ -246,6 +252,17 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         // First check if there is an app available on the device to handle the intent
         if (intent.resolveActivity(getActivity().getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    // Set whether to ask ForecastAdapter to display special today item
+    // This method might be first called from onCreateView()
+    // Also, mForecastAdpater might be null because MainActivity's
+    // onCreate() will be called before this fragment's onCreatView()
+    // so we check whether its null
+    public void setShowSpecialTodayItem(boolean value) {
+        mShowSpecialTodayItem = value;
+        if(mForecastAdapter != null)
+            mForecastAdapter.setShowSpecialTodayItem(mShowSpecialTodayItem);
     }
 
     // CurosorLoader callback methods

@@ -20,6 +20,9 @@ import org.w3c.dom.Text;
 public class ForecastAdapter extends CursorAdapter {
     private Context mContext;
 
+    // Decides whether the special today list item should be shown
+    private boolean mShowSpecialTodayItem;
+
     // View type constants
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
@@ -33,12 +36,16 @@ public class ForecastAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mShowSpecialTodayItem) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
     public int getViewTypeCount() {
         return VIEW_TYPE_COUNT;
+    }
+
+    public void setShowSpecialTodayItem(boolean value) {
+        mShowSpecialTodayItem = value;
     }
 
     /**
