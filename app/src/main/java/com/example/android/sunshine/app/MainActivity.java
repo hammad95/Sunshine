@@ -51,6 +51,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 findFragmentById(R.id.fragment_forecast);
         forecastFragment.setShowSpecialTodayItem(!mTwoPane);
 
+        // Notify ForecastFragment whether device is in two-pane mode
+        forecastFragment.setDeviceMode(mTwoPane);
+
         // Get Support ActionBar
         ActionBar actionBar = getSupportActionBar();
 

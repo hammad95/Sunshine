@@ -70,6 +70,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     // Decides whether the special today list item should be shown
     private boolean mShowSpecialTodayItem;
 
+    // Device mode
+    private boolean mTwoPane;
+
     static final String[] FORECAST_COLUMNS = {
             // In this case the id needs to be fully qualified with a table name, since
             // the content provider joins the location & weather tables in the background
@@ -265,6 +268,11 @@ public class ForecastFragment extends android.support.v4.app.Fragment
             mForecastAdapter.setShowSpecialTodayItem(mShowSpecialTodayItem);
     }
 
+    // Sets the value of mTwoPane based on the device mode
+    public void setDeviceMode(boolean twoPaneMode) {
+        mTwoPane = twoPaneMode;
+    }
+
     // CurosorLoader callback methods
 
     @Override
@@ -303,7 +311,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         mForecastAdapter.changeCursor(data);
 
         // Scroll to saved ListView position if tablet is rotated
-        if(mPosition != ListView.INVALID_POSITION)
+        if(mPosition != ListView.INVALID_POSITION && mTwoPane)
             listView_forecast.smoothScrollToPosition(mPosition);
     }
 
