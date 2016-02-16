@@ -43,6 +43,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             }
         } else {
             mTwoPane = false;
+            getSupportActionBar().setElevation(0f); // To eliminate the shadow of the ActionBar
+                                                    // on the ForecastFragment in phones
         }
 
         // Notify ForecastFragment to show the special
@@ -54,15 +56,15 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         // Notify ForecastFragment whether device is in two-pane mode
         forecastFragment.setDeviceMode(mTwoPane);
 
-        // Get Support ActionBar
-        ActionBar actionBar = getSupportActionBar();
-
-        // Set home button to display app icon in ActionBar
-        ///////////****************DOESN'T WORK*******************//////////////////
-        if(actionBar != null) {
-            actionBar.setLogo(R.drawable.ic_launcher);
-            actionBar.setDisplayUseLogoEnabled(true);
-        }
+//        // Get Support ActionBar
+//        ActionBar actionBar = getSupportActionBar();
+//
+//        // Set home button to display app icon in ActionBar
+//        ///////////****************DOESN'T WORK*******************//////////////////
+//        if(actionBar != null) {
+//            actionBar.setLogo(R.drawable.ic_launcher);
+//            actionBar.setDisplayUseLogoEnabled(true);
+//        }
     }
 
     @Override

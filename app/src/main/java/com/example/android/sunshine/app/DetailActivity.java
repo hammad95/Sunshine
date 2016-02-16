@@ -59,7 +59,6 @@ public class DetailActivity extends ActionBarActivity {
         // Set home button to navigate to MainActivity and display app icon in ActionBar
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setIcon(R.drawable.ic_launcher);
         }
     }
 }
