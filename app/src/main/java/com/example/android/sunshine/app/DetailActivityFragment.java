@@ -170,6 +170,9 @@ public class DetailActivityFragment extends Fragment
                 data.getString(COL_WEATHER_DESC);
         mDescriptionView.setText(weatherDescription);
 
+        // For talk back accessibility, assign a content description to the icon
+        mIconView.setContentDescription(weatherDescription);
+
         boolean isMetric = Utility.isMetric(getActivity());
         String high = Utility.formatTemperature(getContext(),
                 data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
