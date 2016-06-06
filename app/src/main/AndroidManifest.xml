@@ -14,6 +14,9 @@
             android:name=".data.WeatherProvider"
             android:authorities="com.example.android.sunshine.app" />
 
+        <service
+            android:name=".service.SunshineService" />
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/ForecastTheme"

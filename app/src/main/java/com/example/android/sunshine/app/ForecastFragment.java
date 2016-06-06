@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.service.SunshineService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,9 +46,6 @@ import android.support.v4.content.CursorLoader;
  */
 public class ForecastFragment extends android.support.v4.app.Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
-
-
-    // Variables and Constants
 
     // ListView to display weather forecast data
     private ListView listView_forecast;
@@ -223,18 +221,12 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     }
 
     private void updateWeather() {
-        // Get default SharedPreferences and store the key/value pair
-        // for ZIP code to execute the AsyncTask with
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                this.getContext()
-        );
-        String zipcode = defaultSharedPreferences.getString(
-                getString(R.string.pref_location_key), getString(R.string.pref_location_default_val)
-        );
-
-        // Create an instance of FetchWeatherTask and send the retrieved String
-        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getContext());
-        fetchWeatherTask.execute(zipcode);
+        // Instantiate SunshineService using an implicit intent
+        // to fetch weather data from the OpenWeatherMap server
+        Intent intent = new Intent(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                        Utility.getPreferredLocation(getActivity()));
+        getActivity().startService(intent);
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
