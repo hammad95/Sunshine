@@ -1,5 +1,8 @@
 package com.example.android.sunshine.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -220,13 +223,28 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
+    // Sends a broadcast using an AlarmManager to be receive by SunshineService.AlarmReceiver
     private void updateWeather() {
-        // Instantiate SunshineService using an implicit intent
-        // to fetch weather data from the OpenWeatherMap server
-        Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+
+        // Create an intent to launch SunshineService.AlarmReceiver
+        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
                         Utility.getPreferredLocation(getActivity()));
-        getActivity().startService(intent);
+
+        // Wrap the intent inside a PendingIntent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getContext(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT
+        );
+
+        // Use an AlarmManager to send a broadcast to be
+        // received by SunshineService.AlarmReceiver
+        AlarmManager alarmManager = (AlarmManager)
+                getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(
+                AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis()+5000,
+                pendingIntent
+        );
     }
 
     // Starts an implicit intent to show the user's preferred location on a map

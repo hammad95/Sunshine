@@ -1,6 +1,9 @@
 package com.example.android.sunshine.app.service;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -321,6 +324,17 @@ public class SunshineService extends IntentService {
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+        }
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent serviceIntent = new Intent(context, SunshineService.class);
+            serviceIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                    intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA));
+            context.startService(serviceIntent);
         }
     }
 }
