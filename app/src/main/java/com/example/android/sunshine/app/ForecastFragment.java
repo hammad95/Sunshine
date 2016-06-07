@@ -24,6 +24,7 @@ import android.widget.ListView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.service.SunshineService;
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -225,26 +226,28 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
     // Sends a broadcast using an AlarmManager to be receive by SunshineService.AlarmReceiver
     private void updateWeather() {
-
-        // Create an intent to launch SunshineService.AlarmReceiver
-        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
-                        Utility.getPreferredLocation(getActivity()));
-
-        // Wrap the intent inside a PendingIntent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                getContext(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT
-        );
-
-        // Use an AlarmManager to send a broadcast to be
-        // received by SunshineService.AlarmReceiver
-        AlarmManager alarmManager = (AlarmManager)
-                getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(
-                AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis()+5000,
-                pendingIntent
-        );
+//
+//        // Create an intent to launch SunshineService.AlarmReceiver
+//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+//        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+//                        Utility.getPreferredLocation(getActivity()));
+//
+//        // Wrap the intent inside a PendingIntent
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                getContext(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT
+//        );
+//
+//        // Use an AlarmManager to send a broadcast to be
+//        // received by SunshineService.AlarmReceiver
+//        AlarmManager alarmManager = (AlarmManager)
+//                getActivity().getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(
+//                AlarmManager.RTC_WAKEUP,
+//                System.currentTimeMillis()+5000,
+//                pendingIntent
+//        );
+        // Call to syncImmediately() inside of SunshineSyncAdapter
+        SunshineSyncAdapter.syncImmediately(getContext());
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
