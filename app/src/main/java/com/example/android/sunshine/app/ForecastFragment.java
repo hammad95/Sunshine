@@ -2,6 +2,7 @@ package com.example.android.sunshine.app;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContentResolverCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -246,8 +248,28 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 //                System.currentTimeMillis()+5000,
 //                pendingIntent
 //        );
-        // Call to syncImmediately() inside of SunshineSyncAdapter
+
+        /*
+            This code is already inside the syncImmediately() function in SunshineSyncAdapter
+
+            // Start a manual sync using the SunshineSyncAdapter class
+            // Pass the sync flags by putting them in a bundle
+            Bundle settingsBundle = new Bundle();
+            settingsBundle.putBoolean(
+                    ContentResolver.SYNC_EXTRAS_MANUAL, true    // To specify a manual sync
+            );
+            settingsBundle.putBoolean(
+                    ContentResolver.SYNC_EXTRAS_EXPEDITED, true // To specify an immediate sync
+            );
+
+            // Request the sync
+            ContentResolver.requestSync(SunshineSyncAdapter.getSyncAccount(getContext()),
+                    getString(R.string.content_authority), settingsBundle);
+      */
+
+        // To start the sync, call SunshineSyncAdapter.syncImmediately()
         SunshineSyncAdapter.syncImmediately(getContext());
+
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
