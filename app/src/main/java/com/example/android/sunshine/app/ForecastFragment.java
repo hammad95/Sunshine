@@ -1,19 +1,10 @@
 package com.example.android.sunshine.app;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContentResolverCompat;
-import android.text.format.Time;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,27 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
-import com.example.android.sunshine.app.service.SunshineService;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
@@ -228,44 +203,6 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
     // Sends a broadcast using an AlarmManager to be receive by SunshineService.AlarmReceiver
     private void updateWeather() {
-//
-//        // Create an intent to launch SunshineService.AlarmReceiver
-//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-//        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
-//                        Utility.getPreferredLocation(getActivity()));
-//
-//        // Wrap the intent inside a PendingIntent
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-//                getContext(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT
-//        );
-//
-//        // Use an AlarmManager to send a broadcast to be
-//        // received by SunshineService.AlarmReceiver
-//        AlarmManager alarmManager = (AlarmManager)
-//                getActivity().getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(
-//                AlarmManager.RTC_WAKEUP,
-//                System.currentTimeMillis()+5000,
-//                pendingIntent
-//        );
-
-        /*
-            This code is already inside the syncImmediately() function in SunshineSyncAdapter
-
-            // Start a manual sync using the SunshineSyncAdapter class
-            // Pass the sync flags by putting them in a bundle
-            Bundle settingsBundle = new Bundle();
-            settingsBundle.putBoolean(
-                    ContentResolver.SYNC_EXTRAS_MANUAL, true    // To specify a manual sync
-            );
-            settingsBundle.putBoolean(
-                    ContentResolver.SYNC_EXTRAS_EXPEDITED, true // To specify an immediate sync
-            );
-
-            // Request the sync
-            ContentResolver.requestSync(SunshineSyncAdapter.getSyncAccount(getContext()),
-                    getString(R.string.content_authority), settingsBundle);
-      */
 
         // To start the sync, call SunshineSyncAdapter.syncImmediately()
         SunshineSyncAdapter.syncImmediately(getContext());
