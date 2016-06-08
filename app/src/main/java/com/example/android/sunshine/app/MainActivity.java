@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
+
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback{
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -65,6 +67,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 //            actionBar.setLogo(R.drawable.ic_launcher);
 //            actionBar.setDisplayUseLogoEnabled(true);
 //        }
+
+        // Initialize SunshineSyncAdapter
+        SunshineSyncAdapter.initializeSyncAdapter(this);
+
     }
 
     @Override
