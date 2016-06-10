@@ -521,7 +521,15 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             if ( cVVector.size() > 0 ) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
+
+                // Bulk insert data into db
                 inserted = mContentResolver.bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+
+                // Delete weather data from db that is more than one day old
+                getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+                        WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
+                        new String[] {Long.toString(dayTime.setJulianDay(julianStartDay-1))});
+
                 notifyWeather();    // Display notification after inserting new data into db
             }
 
