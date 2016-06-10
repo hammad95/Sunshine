@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ import android.support.v4.content.CursorLoader;
  */
 public class ForecastFragment extends android.support.v4.app.Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     // ListView to display weather forecast data
     private ListView listView_forecast;
@@ -175,7 +178,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
         if(id == R.id.action_map) {
             // Call helper method to show the preferred location on a map
-            showPreferredLocationOnMap();
+            openPreferredLocationInMap();
         }
 
         return super.onOptionsItemSelected(item);
@@ -210,23 +213,29 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     }
 
     // Starts an implicit intent to show the user's preferred location on a map
-    private void showPreferredLocationOnMap() {
-        String zipcode = defaultSharedPreferences.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default_val));
+    private void openPreferredLocationInMap() {
+        // Using the URI scheme for showing a location found on a map.  This super-handy
+        // intent is detailed in the "Common Intents" page of Android's developer site:
+        // http://developer.android.com/guide/components/intents-common.html#Maps
+        if ( null != mForecastAdapter ) {
+            Cursor c = mForecastAdapter.getCursor();
+            if ( null != c ) {
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
 
-        // Query parameter keys
-        final String QUERY_PARAM = "q";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
 
-        Uri uri = Uri.parse("geo:0,0?").buildUpon().
-                appendQueryParameter(QUERY_PARAM, zipcode).
-                build();
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-
-        // First check if there is an app available on the device to handle the intent
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null)
-            startActivity(intent);
+        }
     }
 
     // Set whether to ask ForecastAdapter to display special today item
