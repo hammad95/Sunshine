@@ -166,12 +166,12 @@ public class ForecastFragment extends android.support.v4.app.Fragment
             return true;
         }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            // Call update weather to fetch weather from OWM
-            updateWeather();
-            return true;
-        }
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_refresh) {
+//            // Call update weather to fetch weather from OWM
+//            updateWeather();
+//            return true;
+//        }
 
         if(id == R.id.action_map) {
             // Call helper method to show the preferred location on a map
