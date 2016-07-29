@@ -21,6 +21,9 @@
     <string name="pref_units_metric" translatable="false">celsius</string>
     <string name="pref_units_imperial" translatable="false">fahrenheit</string>
 
+    <!--Key name for storing location status in SharedPreferences-->
+    <string name="pref_location_status_key" translatable="false">sync_results</string>
+
     <!-- Date label when displaying today's weather forecast [CHAR LIMIT=20] -->
     <string name="today">Today</string>
 
