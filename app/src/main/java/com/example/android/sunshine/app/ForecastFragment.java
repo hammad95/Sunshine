@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,7 +29,8 @@ import android.widget.TextView;
  * Created by Hassan on 12/30/2015.
  */
 public class ForecastFragment extends android.support.v4.app.Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+                   SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
@@ -201,6 +203,26 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         super.onSaveInstanceState(outstate);
     }
 
+    @Override
+    public void onResume() {
+
+        // Register an onPreferenceChangeListener to the default SharedPreferences
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sp.registerOnSharedPreferenceChangeListener(this);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+
+        // Deregister an onPreferenceChangeListener to the default SharedPreferences
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+
+        super.onPause();
+    }
+
     public void onLocationChanged() {
         // Update the weather
         updateWeather();
@@ -245,7 +267,7 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
     // Set whether to ask ForecastAdapter to display special today item
     // This method might be first called from onCreateView()
-    // Also, mForecastAdpater might be null because MainActivity's
+    // Also, mForecastAdapter might be null because MainActivity's
     // onCreate() will be called before this fragment's onCreatView()
     // so we check whether its null
     public void setShowSpecialTodayItem(boolean value) {
@@ -318,14 +340,34 @@ public class ForecastFragment extends android.support.v4.app.Fragment
             if(emptyView != null) {
                 // adapter could be empty because location is invalid
                 int errorString = R.string.forecast_list_empty;
-                // Or it could be empty because no network connection
-                if(!Utility.isConnected(getContext())) {
-                    errorString = R.string.network_connection_error;
+                // Get the location status from SharedPreferences
+                @SunshineSyncAdapter.LocationStatus final int LOCATION_STATUS =
+                        Utility.getLocationStatus(getContext());
+                switch (LOCATION_STATUS) {
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        errorString = R.string.forecast_list_empty_server_down;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        errorString = R.string.forecast_list_empty_server_error;
+                        break;
+                    default:
+                        // Or it could be empty because no network connection
+                        if(!Utility.isConnected(getContext())) {
+                            errorString = R.string.forecast_list_empty_network_error;
+                        }
                 }
-                // Get the appropriate string based on the error reason
+                // Set the appropriate string to the emptyView based on the error reason
                 emptyView.setText(getString(errorString));
             }
         }
+    }
+
+    // Listens for changes to SharedPreferences
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // Call updateEmptyView whenever the location status preference changes
+        if(key.equals(getString(R.string.pref_location_status_key)))
+            updateEmptyView();
     }
 
     /**
