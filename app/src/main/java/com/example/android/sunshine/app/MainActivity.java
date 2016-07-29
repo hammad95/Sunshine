@@ -30,6 +30,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         mLocation = Utility.getPreferredLocation(this);
 
         setContentView(R.layout.activity_main);
+
         if (findViewById(R.id.container_content_detail) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
@@ -57,16 +58,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
         // Notify ForecastFragment whether device is in two-pane mode
         forecastFragment.setDeviceMode(mTwoPane);
-
-//        // Get Support ActionBar
-//        ActionBar actionBar = getSupportActionBar();
-//
-//        // Set home button to display app icon in ActionBar
-//        ///////////****************DOESN'T WORK*******************//////////////////
-//        if(actionBar != null) {
-//            actionBar.setLogo(R.drawable.ic_launcher);
-//            actionBar.setDisplayUseLogoEnabled(true);
-//        }
 
         // Initialize SunshineSyncAdapter
         SunshineSyncAdapter.initializeSyncAdapter(this);

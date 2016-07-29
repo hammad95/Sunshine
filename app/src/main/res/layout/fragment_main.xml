@@ -10,4 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/tvForecastListEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:text="@string/forecast_list_empty"
+        android:padding="@dimen/default_padding" />
+
 </FrameLayout>

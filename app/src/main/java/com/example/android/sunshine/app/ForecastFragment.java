@@ -21,6 +21,7 @@ import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
+import android.widget.TextView;
 
 /**
  * Fragment to be used by MainActivity
@@ -108,6 +109,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         // Retrieve ListView and set adapter
         listView_forecast = (ListView) rootView.findViewById(
                 R.id.listView_forecast);
+        // Before setting the adapter, set an empty view to the list
+        View emptyView = rootView.findViewById(R.id.tvForecastListEmpty);
+        listView_forecast.setEmptyView(emptyView);
+        // Set the adapter
         listView_forecast.setAdapter(mForecastAdapter);
 
         // Add onItemClickListener to ListView
@@ -287,19 +292,40 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        // Move the query results into the adapter causing the assoiated ListView
+        // Move the query results into the adapter causing the associated ListView
         // to redisplay its contents
         mForecastAdapter.changeCursor(data);
 
         // Scroll to saved ListView position if tablet is rotated
         if(mPosition != ListView.INVALID_POSITION && mTwoPane)
             listView_forecast.smoothScrollToPosition(mPosition);
+
+        // Checks if adapter is empty and sets the appropriate string
+        // to the emptyView of the ListView
+        updateEmptyView();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // Delete the adapter' reference to the cursor to prevent mo=emory leak
         mForecastAdapter.changeCursor(null);
+    }
+
+    public void updateEmptyView() {
+        // If mForecastAdapter is empty
+        if(mForecastAdapter.getCount() == 0) {
+            TextView emptyView = (TextView) getView().findViewById(R.id.tvForecastListEmpty);
+            if(emptyView != null) {
+                // adapter could be empty because location is invalid
+                int errorString = R.string.forecast_list_empty;
+                // Or it could be empty because no network connection
+                if(!Utility.isConnected(getContext())) {
+                    errorString = R.string.network_connection_error;
+                }
+                // Get the appropriate string based on the error reason
+                emptyView.setText(getString(errorString));
+            }
+        }
     }
 
     /**
