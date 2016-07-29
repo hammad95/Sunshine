@@ -49,7 +49,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // A location status annotated interface
     @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN, LOCATION_STATUS_SERVER_INVALID,
-            LOCATION_STATUS_UNKNOWN})
+            LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_LOCATION_INVALID})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LocationStatus {}
 
@@ -58,6 +58,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int LOCATION_STATUS_SERVER_DOWN = 1;
     public static final int LOCATION_STATUS_SERVER_INVALID = 2;
     public static final int LOCATION_STATUS_UNKNOWN = 3;
+    public static final int LOCATION_STATUS_LOCATION_INVALID = 4;
 
     // Interval at which to sync with the weather, in milliseconds.
     // 60 seconds (1 minute)  180 = 3 hours
@@ -422,6 +423,9 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         // These are the names of the JSON objects that need to be extracted.
 
+        // Code returned from server
+        final String OWM_MESSAGE_CODE = "cod";
+
         // Location information
         final String OWM_CITY = "city";
         final String OWM_CITY_NAME = "name";
@@ -450,6 +454,26 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
+
+            // if we have an error...
+            if(forecastJson.has(OWM_MESSAGE_CODE)) {
+                int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
+                switch (errorCode) {
+                    //  if status ok, continue
+                    case HttpURLConnection.HTTP_OK:
+                        break;
+                    // if not found, location invalid
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        setLocationStatus(getContext(), LOCATION_STATUS_LOCATION_INVALID);
+                        return;
+                    // by default, assume server is down
+                    default:
+                        setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+                        return;
+                }
+            }
+
+
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
@@ -568,6 +592,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(context.getString(R.string.pref_location_status_key), locationStatus);
-        spe.commit();   // Use commit since we are on a background thread
+        spe.commit();   // Use commit since this will be called from a background thread
     }
 }

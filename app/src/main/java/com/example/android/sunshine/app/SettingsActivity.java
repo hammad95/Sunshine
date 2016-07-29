@@ -2,12 +2,16 @@ package com.example.android.sunshine.app;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -18,7 +22,8 @@ import android.preference.PreferenceManager;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity
-        implements Preference.OnPreferenceChangeListener {
+        implements Preference.OnPreferenceChangeListener,
+                   SharedPreferences.OnSharedPreferenceChangeListener{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,20 @@ public class SettingsActivity extends PreferenceActivity
             preference.setSummary(stringValue);
         }
         return true;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // If location is changed
+        if(key.equals(getString(R.string.pref_location_key))) {
+            // First reset the location status
+            Utility.resetLocationStatus(this);
+            // Sync with server since location has been changed
+            SunshineSyncAdapter.syncImmediately(this);
+        } else if(key.equals(getString(R.string.pref_units_key))) { // if units have changed
+                // Update list of weather entries accordingly
+                getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

@@ -76,10 +76,8 @@
     
     <!--Text to display when no forecast data available-->
     <string name="forecast_list_empty">No Weather Information Available</string>
-    <string name="forecast_list_empty_network_error">No weather information available.
-        No network connection available to fetch weather data.</string>
-    <string name="forecast_list_empty_server_down">No weather information available.
-        The server may be down.</string>
-    <string name="forecast_list_empty_server_error">No weather information available.
-        The server is not returning valid data. Please check for an updated version of Sunshine.</string>
+    <string name="forecast_list_empty_network_error">No weather information available. No network connection available to fetch weather data.</string>
+    <string name="forecast_list_empty_server_down">No weather information available. The server may be down.</string>
+    <string name="forecast_list_empty_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
+    <string name="forecast_list_empty_invalid_location">No weather information available. The location entered is not recognized by the server.</string>
 </resources>

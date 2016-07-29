@@ -273,4 +273,13 @@ public class Utility {
         return sp.getInt(context.getString(R.string.pref_location_status_key),
                 SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
     }
+
+    // Resets the current location status to unknown
+    public static void resetLocationStatus(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(context.getString(R.string.pref_location_status_key),
+                SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
+        spe.apply();   // Use apply since it will be called from the UI thread
+    }
 }
