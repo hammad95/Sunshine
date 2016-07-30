@@ -20,8 +20,8 @@ public class LocationEditTextPreference extends EditTextPreference {
     public static final int DEFAULT_MIN_LOCATION_LENGTH = 3;
     private int mMinLength;
 
-    public LocationEditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public LocationEditTextPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         // Get the styled attribute for LocationEditTextPreference
         TypedArray ta = getContext().getTheme().obtainStyledAttributes(
