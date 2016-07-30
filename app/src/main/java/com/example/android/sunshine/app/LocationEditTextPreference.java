@@ -1,14 +1,15 @@
 package com.example.android.sunshine.app;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -16,6 +17,8 @@ import android.widget.EditText;
  * Created by Hassan on 7/30/2016.
  */
 public class LocationEditTextPreference extends EditTextPreference {
+
+    public static final String LOG_TAG = LocationEditTextPreference.class.getSimpleName();
 
     public static final int DEFAULT_MIN_LOCATION_LENGTH = 3;
     private int mMinLength;
