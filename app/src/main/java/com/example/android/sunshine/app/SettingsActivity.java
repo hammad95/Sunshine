@@ -38,6 +38,24 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
     }
 
+    @Override
+    protected void onResume() {
+        // Register an onSahredPreferenceChangeListener
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        // Unregister an onSharedPreferenceChangeListener
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+
+        super.onPause();
+    }
+
     /**
      * Attaches a listener so the summary is always updated with the preference value.
      * Also fires the listener once, to initialize the summary (so it shows up before the value
