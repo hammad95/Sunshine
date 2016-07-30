@@ -49,7 +49,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // A location status annotated interface
     @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN, LOCATION_STATUS_SERVER_INVALID,
-            LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_LOCATION_INVALID})
+            LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LocationStatus {}
 
@@ -58,7 +58,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int LOCATION_STATUS_SERVER_DOWN = 1;
     public static final int LOCATION_STATUS_SERVER_INVALID = 2;
     public static final int LOCATION_STATUS_UNKNOWN = 3;
-    public static final int LOCATION_STATUS_LOCATION_INVALID = 4;
+    public static final int LOCATION_STATUS_INVALID = 4;
 
     // Interval at which to sync with the weather, in milliseconds.
     // 60 seconds (1 minute)  180 = 3 hours
@@ -464,7 +464,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                         break;
                     // if not found, location invalid
                     case HttpURLConnection.HTTP_NOT_FOUND:
-                        setLocationStatus(getContext(), LOCATION_STATUS_LOCATION_INVALID);
+                        setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
                         return;
                     // by default, assume server is down
                     default:

@@ -73,9 +73,11 @@ public class SettingsActivity extends PreferenceActivity
                         .getString(preference.getKey(), ""));
     }
 
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
         String stringValue = value.toString();
+        String key = preference.getKey();
 
         if (preference instanceof ListPreference) {
             // For list preferences, look up the correct display value in
@@ -85,6 +87,24 @@ public class SettingsActivity extends PreferenceActivity
             if (prefIndex >= 0) {
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
             }
+        } else if(key.equals(getString(R.string.pref_location_key))) {  // if location changed
+            @SunshineSyncAdapter.LocationStatus int status = Utility.getLocationStatus(this);
+            switch (status) {
+                case SunshineSyncAdapter.LOCATION_STATUS_OK:
+                    preference.setSummary(stringValue);
+                    break;
+                case SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN:
+                    preference.setSummary(getString(R.string.pref_location_unknown_description, value.toString()));
+                    break;
+                case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                    preference.setSummary(getString(R.string.pref_location_error_description, value.toString()));
+                    break;
+                default:
+                    // If the server is down we still assume the value
+                    // is valid
+                    preference.setSummary(stringValue);
+            }
+
         } else {
             // For other preferences, set the summary to the value's simple string representation.
             preference.setSummary(stringValue);

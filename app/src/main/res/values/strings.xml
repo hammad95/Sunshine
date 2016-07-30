@@ -80,4 +80,8 @@
     <string name="forecast_list_empty_server_down">No weather information available. The server may be down.</string>
     <string name="forecast_list_empty_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
     <string name="forecast_list_empty_invalid_location">No weather information available. The location entered is not recognized by the server.</string>
+
+    <!-- Strings used when displaying the state of the Location in settings; &#8230 = ... -->
+    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_location_unknown_description">Validating Location&#8230; (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
 </resources>
