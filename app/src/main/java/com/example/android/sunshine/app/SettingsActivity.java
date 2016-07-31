@@ -36,6 +36,7 @@ public class SettingsActivity extends PreferenceActivity
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_art_pack_key)));
     }
 
     @Override
@@ -121,8 +122,11 @@ public class SettingsActivity extends PreferenceActivity
             // Sync with server since location has been changed
             SunshineSyncAdapter.syncImmediately(this);
         } else if(key.equals(getString(R.string.pref_units_key))) { // if units have changed
-                // Update list of weather entries accordingly
-                getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+            // Update list of weather entries accordingly
+            getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+        } else if ( key.equals(getString(R.string.pref_art_pack_key)) ) {
+            // art pack have changed. update lists of weather entries accordingly
+            getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
         }
     }
 

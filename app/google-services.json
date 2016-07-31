@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "637879772374",
+    "project_id": "gcm-project-1469976762254"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637879772374:android:83b792e26f07bf18",
+        "android_client_info": {
+          "package_name": "com.example.android.sunshine.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuKScWnO7PebAM76G0Ks1MMt78FT3frjI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
