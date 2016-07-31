@@ -20,6 +20,8 @@ import android.support.v7.widget.ShareActionProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.example.android.sunshine.app.data.WeatherContract;
 
 /**
@@ -157,8 +159,12 @@ public class DetailActivityFragment extends Fragment
         int weatherConditionId = data.getInt(COL_WEATHER_CONDITION_ID);
         // Get the id of the right image based on the condition code
         int weatherIcon = Utility.getArtResourceForWeatherCondition(weatherConditionId);
-        // Set the image to the ImageView
-        mIconView.setImageResource(weatherIcon);
+        // Set the image to the ImageView using Glide
+        Glide.with(this).
+                load(Utility.getArtUrlForWeatherCondition(getContext(), weatherConditionId)).
+                error(weatherIcon).
+                crossFade().
+                into(mIconView);
 
         long date = data.getLong(COL_WEATHER_DATE);
         String friendlyDateText = Utility.getDayName(getActivity(), date);

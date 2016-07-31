@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.sunshine.app.data.WeatherContract;
 
 import org.w3c.dom.Text;
@@ -106,20 +107,31 @@ public class ForecastAdapter extends CursorAdapter {
 
         // The today row uses a colored image, whereas, the future day
         // uses a gray image. Therefore, we need to figure out which
-        // position we're at and then set the correct image.
+        // position we're at and then set the correct image to the fallback
+        // image if the Glide fails to download the image
+
+        // Get weather id and icon
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        int fallbackIcon;
+
+        // Get the view type
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
             case VIEW_TYPE_TODAY:
-                // Get weather icon
-                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
-                ));
+                // set fallback to colored icon
+                fallbackIcon = Utility.getArtResourceForWeatherCondition(weatherId);
                 break;
-            case VIEW_TYPE_FUTURE_DAY:
-                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
-                ));
+            default:
+                // set fallback to gray icon
+                fallbackIcon = Utility.getIconResourceForWeatherCondition(weatherId);
         }
+
+        // Get image using Glide
+        Glide.with(context).
+                load(Utility.getArtUrlForWeatherCondition(context, weatherId)).
+                error(fallbackIcon).
+                crossFade().
+                into(viewHolder.iconView);
 
         // Read date from cursor
         long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
