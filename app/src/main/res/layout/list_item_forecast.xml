@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="@dimen/medium_paddinge">
         <ImageView
             android:id="@+id/list_item_icon"
             android:layout_width="wrap_content"
