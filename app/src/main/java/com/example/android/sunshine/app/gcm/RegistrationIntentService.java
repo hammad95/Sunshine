@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app;
+package com.example.android.sunshine.app.gcm;
 
 /**
  * Created by Hassan on 7/31/2016.
@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.android.sunshine.app.MainActivity;
+import com.example.android.sunshine.app.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
@@ -33,7 +35,7 @@ public class RegistrationIntentService extends IntentService {
                 // are local.
                 InstanceID instanceID = InstanceID.getInstance(this);
                 String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
-                        GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                        GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);;
                 sendRegistrationToServer(token);
 
                 // You should store a boolean that indicates whether the generated token has been
